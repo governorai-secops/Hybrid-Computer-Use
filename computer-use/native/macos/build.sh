@@ -154,7 +154,13 @@ else
   exit 2
 fi
 
-codesign_identity="${COMPUTER_USE_CODESIGN_IDENTITY:--}"
+if [[ -n "${COMPUTER_USE_CODESIGN_IDENTITY:-}" ]]; then
+  codesign_identity="${COMPUTER_USE_CODESIGN_IDENTITY}"
+elif [[ -f "${runtime_root}/codesign.identity" ]]; then
+  codesign_identity="$(tr -d '\r\n' < "${runtime_root}/codesign.identity")"
+else
+  codesign_identity="-"
+fi
 codesign --force --sign "${codesign_identity}" \
   "${output_dir}/libComputerUseProviderKit.dylib"
 codesign --force --sign "${codesign_identity}" \

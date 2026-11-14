@@ -118,12 +118,32 @@ func (s *Service) axBatchDecoded(
 	if axBatchOnlyWaits(actions) {
 		return s.axWaitOnly(actions, obs, windowRef)
 	}
+	if paused, reason := estateRPAPause(); paused {
+		message := "RPA_PAUSED:" + reason
+		result := TextResult(message, true)
+		result.StructuredContent = map[string]any{
+			contract.AXPublicErrorCodeKey:   contract.AXCodeRuntimeError,
+			contract.AXPublicErrorDetailKey: message,
+			contract.AXPublicErrorHintKey:   `{"mode":"apps"}`,
+			"failure_code":                  "rpa_paused",
+			"input_events_emitted":          false,
+			"action_attempted":              false,
+			"preflight_only":                true,
+			"evidence_scope":                "error_only",
+			"completed":                     0,
+			"requested":                     requested,
+		}
+		return result
+	}
 	bindingNotes := []string{}
 	for index := range actions {
 		if actions[index].title == "" {
 			continue
 		}
-		window, argErr := s.resolveWindowTitle(actions[index].title)
+		window, argErr := s.resolveDirectedWindow(
+			actions[index].title,
+			actions[index].actionType == "activate",
+		)
 		if argErr != nil {
 			argErr.path = fmt.Sprintf("actions[%d].title", index)
 			return axArgErrorResult(argErr, requested)

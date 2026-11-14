@@ -59,6 +59,8 @@ func TestGUISchemaAfterOpenCodeConversion(t *testing.T) {
 	}{
 		{"screenshot", `{"actions":[{"type":"screenshot"}]}`, true},
 		{"click", `{"actions":[{"type":"click","x":1,"y":2}]}`, true},
+		{"estate click", `{"actions":[{"type":"click","window_ref":"w1","fx":0.08,"fy":0.04}]}`, true},
+		{"estate title click", `{"actions":[{"type":"click","title":"Calculator","fx":0.5,"fy":0.5}]}`, true},
 		{"input batch", `{"actions":[{"type":"click","x":1,"y":2},{"type":"type","text":"hello"},{"type":"keypress","keys":["ENTER"]}]}`, true},
 		{"missing actions", `{}`, false},
 		{"empty actions", `{"actions":[]}`, false},

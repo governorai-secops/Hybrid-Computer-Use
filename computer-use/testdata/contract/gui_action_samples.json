@@ -1,27 +1,5 @@
 [
  {
-  "origin": "action0/:alias_action",
-  "action": {
-   "action": "click",
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:alias_action",
-  "action": {
-   "action": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action1/:alias_action",
   "action": {
    "action": "double_click",
@@ -160,20 +138,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/:legacy_actions",
-  "action": {
-   "actions": [],
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action3/:legacy_actions",
   "action": {
    "actions": [],
@@ -296,16 +260,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/:legacy_actions",
-  "action": {
-   "actions": [],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action1/:legacy_actions",
   "action": {
    "actions": [],
@@ -330,20 +284,6 @@
   "action": {
    "actions": [],
    "type": "wait"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_app",
-  "action": {
-   "app": "libreoffice",
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -470,16 +410,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/:legacy_app",
-  "action": {
-   "app": "libreoffice",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action1/:legacy_app",
   "action": {
    "app": "libreoffice",
@@ -504,20 +434,6 @@
   "action": {
    "app": "libreoffice",
    "type": "wait"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:unknown_field",
-  "action": {
-   "bogus": 1,
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -644,16 +560,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/:unknown_field",
-  "action": {
-   "bogus": 1,
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action1/:unknown_field",
   "action": {
    "bogus": 1,
@@ -678,866 +584,6 @@
   "action": {
    "bogus": 1,
    "type": "wait"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:blank",
-  "action": {
-   "button": "  ",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:lead_space",
-  "action": {
-   "button": " left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:empty",
-  "action": {
-   "button": "",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:numeric_string",
-  "action": {
-   "button": "3",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:upper",
-  "action": {
-   "button": "LEFT",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:title",
-  "action": {
-   "button": "Left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:enum_back",
-  "action": {
-   "button": "back",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//button:add3",
-  "action": {
-   "button": "back",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/button:enum_forward",
-  "action": {
-   "button": "forward",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//button:add4",
-  "action": {
-   "button": "forward",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/button:trail_space",
-  "action": {
-   "button": "left ",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_expect",
-  "action": {
-   "button": "left",
-   "expect": {
-    "appears": "Save"
-   },
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:alias_key",
-  "action": {
-   "button": "left",
-   "key": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys:bare_item",
-  "action": {
-   "button": "left",
-   "keys": "CTRL",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys:string",
-  "action": {
-   "button": "left",
-   "keys": "x",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:blank",
-  "action": {
-   "button": "left",
-   "keys": [
-    "  "
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:lead_space",
-  "action": {
-   "button": "left",
-   "keys": [
-    " CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:empty",
-  "action": {
-   "button": "left",
-   "keys": [
-    ""
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:numeric_string",
-  "action": {
-   "button": "left",
-   "keys": [
-    "3"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:enum_ALT",
-  "action": {
-   "button": "left",
-   "keys": [
-    "ALT"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/keys/0:enum_CONTROL",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CONTROL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/keys/0:trail_space",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL "
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys:repeat_item",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL",
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/:legacy_limit",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "limit": 5,
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_settle_ms",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "settle_ms": 800,
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:blank",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "  ",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:lead_space",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": " click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:empty",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:numeric_string",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "3",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:upper",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "CLICK",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:title",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "Click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:trail_space",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click ",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_view",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "view": "full",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:string",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": "1",
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:negative",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": -1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/x:zero",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 0,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:string",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": "1"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/y:negative",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": -1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:zero",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 0
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:float_integral",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1.0
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:fraction",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1.5
-  },
-  "accepted": true
- },
- {
-  "origin": "action0",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:bool",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": true
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:float_integral",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1.0,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/x:fraction",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1.5,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:missing",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:bool",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": true,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:missing",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:alias_press",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "press",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:number",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": 7,
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:bool",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": true,
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:object",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "type": {
-    "value": "click"
-   },
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:missing",
-  "action": {
-   "button": "left",
-   "keys": [
-    "CTRL"
-   ],
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:enum_SHIFT",
-  "action": {
-   "button": "left",
-   "keys": [
-    "SHIFT"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/keys/0:enum_SUPER",
-  "action": {
-   "button": "left",
-   "keys": [
-    "SUPER"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/keys/0:number",
-  "action": {
-   "button": "left",
-   "keys": [
-    7
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys:empty_array",
-  "action": {
-   "button": "left",
-   "keys": [],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/keys/0:bool",
-  "action": {
-   "button": "left",
-   "keys": [
-    true
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/keys/0:object",
-  "action": {
-   "button": "left",
-   "keys": [
-    {
-     "value": "CTRL"
-    }
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0//button:add0",
-  "action": {
-   "button": "left",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/button:enum_right",
-  "action": {
-   "button": "right",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//button:add1",
-  "action": {
-   "button": "right",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/button:enum_wheel",
-  "action": {
-   "button": "wheel",
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//button:add2",
-  "action": {
-   "button": "wheel",
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/button:number",
-  "action": {
-   "button": 7,
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:bool",
-  "action": {
-   "button": true,
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/button:object",
-  "action": {
-   "button": {
-    "value": "left"
-   },
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -1678,18 +724,6 @@
    },
    "text": "libreoffice",
    "type": "type"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_expect",
-  "action": {
-   "expect": {
-    "appears": "Save"
-   },
-   "type": "click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -2244,18 +1278,6 @@
   "accepted": true
  },
  {
-  "origin": "action0//keys:add3",
-  "action": {
-   "keys": [
-    "ALT"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
   "origin": "action1//keys:add3",
   "action": {
    "keys": [
@@ -2334,18 +1356,6 @@
    ],
    "scroll_y": 1,
    "type": "scroll",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//keys:add1",
-  "action": {
-   "keys": [
-    "CONTROL"
-   ],
-   "type": "click",
    "x": 1,
    "y": 1
   },
@@ -4500,18 +3510,6 @@
   "accepted": false
  },
  {
-  "origin": "action0//keys:add0",
-  "action": {
-   "keys": [
-    "CTRL"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
   "origin": "action1/type:trail_space",
   "action": {
    "keys": [
@@ -5071,18 +4069,6 @@
   "accepted": true
  },
  {
-  "origin": "action0//keys:add2",
-  "action": {
-   "keys": [
-    "SHIFT"
-   ],
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
   "origin": "action1//keys:add2",
   "action": {
    "keys": [
@@ -5161,18 +4147,6 @@
    ],
    "scroll_y": 1,
    "type": "scroll",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0//keys:add4",
-  "action": {
-   "keys": [
-    "SUPER"
-   ],
-   "type": "click",
    "x": 1,
    "y": 1
   },
@@ -5695,16 +4669,6 @@
    "limit": 5,
    "text": "libreoffice",
    "type": "type"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_limit",
-  "action": {
-   "limit": 5,
-   "type": "click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -7450,16 +6414,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/:legacy_settle_ms",
-  "action": {
-   "settle_ms": 800,
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action1/:legacy_settle_ms",
   "action": {
    "settle_ms": 800,
@@ -7676,7 +6630,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:blank",
+  "origin": "action1/type:blank",
   "action": {
    "type": "  ",
    "x": 1,
@@ -7688,15 +6642,6 @@
   "origin": "action8/type:blank",
   "action": {
    "type": "  "
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:lead_space",
-  "action": {
-   "type": " click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -7726,7 +6671,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:empty",
+  "origin": "action1/type:empty",
   "action": {
    "type": "",
    "x": 1,
@@ -7742,7 +6687,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:numeric_string",
+  "origin": "action1/type:numeric_string",
   "action": {
    "type": "3",
    "x": 1,
@@ -7754,24 +6699,6 @@
   "origin": "action8/type:numeric_string",
   "action": {
    "type": "3"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:upper",
-  "action": {
-   "type": "CLICK",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:title",
-  "action": {
-   "type": "Click",
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -7822,158 +6749,6 @@
   "origin": "action8/type:title",
   "action": {
    "type": "Wait"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:trail_space",
-  "action": {
-   "type": "click ",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/:legacy_view",
-  "action": {
-   "type": "click",
-   "view": "full",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:string",
-  "action": {
-   "type": "click",
-   "x": "1",
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:negative",
-  "action": {
-   "type": "click",
-   "x": -1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/x:zero",
-  "action": {
-   "type": "click",
-   "x": 0,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:string",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": "1"
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/y:negative",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": -1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:zero",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": 0
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:float_integral",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": 1.0
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:fraction",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": 1.5
-  },
-  "accepted": true
- },
- {
-  "origin": "action0",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:bool",
-  "action": {
-   "type": "click",
-   "x": 1,
-   "y": true
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:float_integral",
-  "action": {
-   "type": "click",
-   "x": 1.0,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/x:fraction",
-  "action": {
-   "type": "click",
-   "x": 1.5,
-   "y": 1
-  },
-  "accepted": true
- },
- {
-  "origin": "action0/y:missing",
-  "action": {
-   "type": "click",
-   "x": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:bool",
-  "action": {
-   "type": "click",
-   "x": true,
-   "y": 1
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/x:missing",
-  "action": {
-   "type": "click",
-   "y": 1
   },
   "accepted": false
  },
@@ -8296,15 +7071,6 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:alias_press",
-  "action": {
-   "type": "press",
-   "x": 1,
-   "y": 1
-  },
-  "accepted": false
- },
- {
   "origin": "action4/scroll_x:missing",
   "action": {
    "type": "scroll",
@@ -8343,7 +7109,7 @@
   "accepted": true
  },
  {
-  "origin": "action0/type:number",
+  "origin": "action1/type:number",
   "action": {
    "type": 7,
    "x": 1,
@@ -8359,7 +7125,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:bool",
+  "origin": "action1/type:bool",
   "action": {
    "type": true,
    "x": 1,
@@ -8371,17 +7137,6 @@
   "origin": "action8/type:bool",
   "action": {
    "type": true
-  },
-  "accepted": false
- },
- {
-  "origin": "action0/type:object",
-  "action": {
-   "type": {
-    "value": "click"
-   },
-   "x": 1,
-   "y": 1
   },
   "accepted": false
  },
@@ -8417,7 +7172,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/type:missing",
+  "origin": "action1/type:missing",
   "action": {
    "x": 1,
    "y": 1
@@ -8425,7 +7180,7 @@
   "accepted": false
  },
  {
-  "origin": "action0/:empty_object",
+  "origin": "action1/:empty_object",
   "action": {},
   "accepted": false
  }

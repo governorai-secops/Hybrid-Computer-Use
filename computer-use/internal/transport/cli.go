@@ -160,7 +160,7 @@ var cliShorthands = map[string]cliShorthand{
 			}
 			return contract.PublicToolAX, args, nil
 		}},
-	"gui": {"gui screenshot | gui zoom X0 Y0 X1 Y1 | gui click|double_click|move X Y | gui type TEXT | gui key CTRL+S | gui --json '{\"actions\":[...]}'|-|@FILE",
+	"gui": {"gui screenshot | gui zoom X0 Y0 X1 Y1 | gui click|double_click|move X Y | gui click --window wN|--title NAME --fx F --fy F | gui type TEXT | gui key CTRL+S | gui --json '{\"actions\":[...]}'|-|@FILE",
 		func(p []string, f cliFlags) (string, map[string]any, error) {
 			if f.has("json") {
 				var body map[string]any
@@ -181,6 +181,25 @@ var cliShorthands = map[string]cliShorthand{
 					return "", nil, usageError("gui zoom needs numeric X0 Y0 X1 Y1 in frame pixels")
 				}
 				action["region"] = region
+			case (p[0] == "click" || p[0] == "double_click" || p[0] == "move") &&
+				len(p) == 1 && (f.has("window") || f.has("title")) && f.has("fx") && f.has("fy"):
+				if f.has("window") && f.has("title") {
+					return "", nil, usageError("gui " + p[0] + " takes --window or --title, not both")
+				}
+				fx, err := strconv.ParseFloat(f["fx"], 64)
+				if err != nil {
+					return "", nil, usageError("gui " + p[0] + " --fx must be a number")
+				}
+				fy, err := strconv.ParseFloat(f["fy"], 64)
+				if err != nil {
+					return "", nil, usageError("gui " + p[0] + " --fy must be a number")
+				}
+				if f.has("window") {
+					action["window_ref"] = f["window"]
+				} else {
+					action["title"] = f["title"]
+				}
+				action["fx"], action["fy"] = fx, fy
 			case (p[0] == "click" || p[0] == "double_click" || p[0] == "move") && len(p) == 3:
 				point, err := cliNumbers(p[1:])
 				if err != nil {
@@ -402,6 +421,8 @@ func allowedCLIFlags(command string) map[string]bool {
 		flags += " window as wait until pages"
 	case "select":
 		flags += " window as wait until to"
+	case "gui":
+		flags += " window title fx fy"
 	case "batch":
 		flags += " session keep-going text json records"
 	}

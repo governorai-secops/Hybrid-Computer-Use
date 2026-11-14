@@ -4,6 +4,61 @@ import ApplicationServices
 import CoreGraphics
 import Testing
 
+@Test func onlyRegularActivationPolicyIsADesktopInputTarget() {
+    #expect(appIsDesktopInputTarget(activationPolicy: .regular))
+    #expect(!appIsDesktopInputTarget(activationPolicy: .accessory))
+    #expect(!appIsDesktopInputTarget(activationPolicy: .prohibited))
+}
+
+@Test func accessoryAppsDoNotBecomeInventoryIssues() throws {
+    let helper = RunningAppDescriptor(
+        name: "Safari Networking",
+        bundleIdentifier: "com.apple.WebKit.Networking",
+        pid: getpid(),
+        runningApplication: NSRunningApplication.current
+    )
+    var windowReads = 0
+    let result = try macApplicationListing(
+        [helper],
+        accessibilityTrusted: { true },
+        inputCapable: { _ in false },
+        windows: { _ in
+            windowReads += 1
+            throw ComputerUseError.stateUnavailable("AXWindows unavailable (AX -25204)")
+        }
+    )
+    #expect(windowReads == 0)
+    #expect(result.issues.isEmpty)
+    #expect((result.apps[0]["inputCapable"] as? Bool) == false)
+}
+
+@Test func appListingWindowsKeepsEstateBounds() throws {
+    var record = macWindowInventoryRecord(
+        pid: getpid(), generation: "test", windowID: 77, title: "",
+        focusedHandle: nil, modal: false
+    )
+    record["bounds"] = ["x": 0.0, "y": -2160.0, "width": 3840.0, "height": 2160.0]
+    let window = try #require(appListingWindows([record]).first)
+    let bounds = try #require(window["bounds"] as? [String: Double])
+    #expect(bounds["x"] == 0)
+    #expect(bounds["y"] == -2160)
+    #expect(bounds["width"] == 3840)
+    #expect(bounds["height"] == 2160)
+}
+
+@Test func macWindowInventoryRecordIncludesEstateBounds() throws {
+    let record = macWindowInventoryRecord(
+        pid: getpid(), generation: "test", windowID: 77, title: "",
+        focusedHandle: nil, modal: false,
+        bounds: CGRect(x: 0, y: -2160, width: 3840, height: 2160)
+    )
+    let bounds = try #require(record["bounds"] as? [String: Double])
+    #expect(bounds["x"] == 0)
+    #expect(bounds["y"] == -2160)
+    #expect(bounds["width"] == 3840)
+    #expect(bounds["height"] == 2160)
+}
+
 @Test func unnumberedWindowsKeepTitlesWithoutInventingHandles() throws {
     let windowIDs: [CGWindowID?] = [nil, 0]
     for windowID in windowIDs {

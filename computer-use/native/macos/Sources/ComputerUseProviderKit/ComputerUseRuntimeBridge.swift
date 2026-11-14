@@ -198,10 +198,21 @@ public final class ComputerUseRuntimeBridge: @unchecked Sendable {
     }
 }
 
+func appIsDesktopInputTarget(activationPolicy: NSApplication.ActivationPolicy) -> Bool {
+    // Accessory WebKit XPC helpers ("Networking", "Web Content", GPU) answer
+    // AXWindows with -25204. Counting them as input targets marks the whole
+    // inventory incomplete and blocks title/app direction of regular apps.
+    activationPolicy == .regular
+}
+
+func appIsDesktopInputTarget(_ app: RunningAppDescriptor) -> Bool {
+    appIsDesktopInputTarget(activationPolicy: app.runningApplication.activationPolicy)
+}
+
 func macApplicationListing(
     _ apps: [RunningAppDescriptor],
     accessibilityTrusted: () -> Bool = AXIsProcessTrusted,
-    inputCapable: (RunningAppDescriptor) -> Bool = { $0.runningApplication.activationPolicy != .prohibited },
+    inputCapable: (RunningAppDescriptor) -> Bool = appIsDesktopInputTarget,
     windows: (RunningAppDescriptor) throws -> [[String: Any]] = { app in
         let inventory = axWindowInventory(pid: app.pid)
         if inventory.status == .apiDisabled {
