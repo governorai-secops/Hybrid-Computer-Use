@@ -20,6 +20,8 @@ type axDesktopWindow struct {
 	handle  string
 	// noTree marks a window without an accessibility tree.
 	noTree bool
+	// bounds is the native desktop frame when the provider reported it.
+	bounds *frame
 	// appProcess is the provider identity of the owning application
 	// process: its bus name and process generation.
 	appProcess [2]string
@@ -115,6 +117,7 @@ func (s *Service) listDesktopWindows(allowIncomplete bool) (*axWindowInventory, 
 				title: window.Title, active: window.Active, handle: window.Handle,
 				appProcess: [2]string{app.ProviderBusName, app.ProcessGeneration},
 				noTree:     window.NoAccessibilityTree,
+				bounds:     window.Bounds,
 			}
 			inventory.windows = append(inventory.windows, entry)
 			lines = append(lines, entry.line())
@@ -153,6 +156,10 @@ func (window axDesktopWindow) line() string {
 	}
 	if window.noTree {
 		line += "  " + axNoTreeWindowMark
+	}
+	if window.bounds != nil {
+		line += fmt.Sprintf("  bounds=[%g,%g %gx%g]",
+			window.bounds.X, window.bounds.Y, window.bounds.Width, window.bounds.Height)
 	}
 	return line
 }
@@ -211,12 +218,53 @@ func (s *Service) describeAmbiguousApp(result *ToolCallResult, candidates []Prov
 	result.StructuredContent[contract.AXPublicErrorHintKey] = `{"mode":"observe","window_ref":"` + first + `"}`
 }
 
+// windowsMatchingDirective returns windows whose title contains needle.
+// Title matches whose app name also contains the needle win first, so
+// "Positions" still picks the in-app titled window. A unique app-name
+// match then wins over a foreign title (Finder folder named after the
+// app). Any remaining unique title match is last.
+func windowsMatchingDirective(inventory *axWindowInventory, needle string) []axDesktopWindow {
+	if inventory == nil || strings.TrimSpace(needle) == "" {
+		return nil
+	}
+	var titleMatches, inAppTitle, appMatches []axDesktopWindow
+	for _, window := range inventory.windows {
+		titleHit := containsFold(window.title, needle)
+		appHit := containsFold(window.appName, needle)
+		if titleHit {
+			titleMatches = append(titleMatches, window)
+			if appHit {
+				inAppTitle = append(inAppTitle, window)
+			}
+		}
+		if appHit {
+			appMatches = append(appMatches, window)
+		}
+	}
+	if len(inAppTitle) > 0 {
+		return inAppTitle
+	}
+	if len(appMatches) > 0 {
+		return appMatches
+	}
+	return titleMatches
+}
+
 // resolveWindowTitle finds the one visible top-level window whose title
-// contains title, case-insensitively. It runs once, before any input; the
-// returned wN is then verified like any other window ref and is never
-// matched by title again.
+// contains title, case-insensitively. If no title matches, a unique app
+// name match is accepted so empty-title windows remain directed. It runs
+// once, before any input; the returned wN is then verified like any other
+// window ref and is never matched by title again.
 func (s *Service) resolveWindowTitle(title string) (*axDesktopWindow, *axArgError) {
-	inventory, failure := s.listDesktopWindows(false)
+	return s.resolveDirectedWindow(title, false)
+}
+
+// resolveDirectedWindow is resolveWindowTitle with an explicit inventory
+// completeness requirement. Activate may match a unique confirmed window
+// while another application's AXWindows read is incomplete; close-by-title
+// and absence still require a complete listing.
+func (s *Service) resolveDirectedWindow(title string, allowIncomplete bool) (*axDesktopWindow, *axArgError) {
+	inventory, failure := s.listDesktopWindows(allowIncomplete)
 	if inventory == nil {
 		return nil, &axArgError{
 			Code:    contract.AXCodeRuntimeError,
@@ -224,12 +272,7 @@ func (s *Service) resolveWindowTitle(title string) (*axDesktopWindow, *axArgErro
 			Message: "the window list could not be read: " + firstLine(ResultText(failure)),
 		}
 	}
-	matches := []axDesktopWindow{}
-	for _, window := range inventory.windows {
-		if containsFold(window.title, title) {
-			matches = append(matches, window)
-		}
-	}
+	matches := windowsMatchingDirective(inventory, title)
 	switch len(matches) {
 	case 1:
 		return &matches[0], nil
@@ -237,7 +280,7 @@ func (s *Service) resolveWindowTitle(title string) (*axDesktopWindow, *axArgErro
 		return nil, &axArgError{
 			Code:    contract.AXCodeWindowNotFound,
 			path:    "title",
-			Message: "no visible window title contains " + strconv.Quote(title) + ". Windows:\n" + inventory.text,
+			Message: "no visible window title or unique app name contains " + strconv.Quote(title) + ". Windows:\n" + inventory.text,
 			Hint:    `{"type":"activate","ref":"wN"}`,
 		}
 	default:

@@ -17,6 +17,23 @@ import (
 )
 
 func (s *Service) gui(actions any, settleMS int) ToolCallResult {
+	estateGeometryOnly := estateBatchIsGeometryOnly(actions)
+	if estateBatchNeedsSnapshot(actions) && (s.guiSnapshot == nil || s.guiSnapshot.FrameID == "") {
+		return s.guiObserveWithoutInput()
+	}
+	actions, err := s.bindEstateGUIClicks(actions)
+	if err != nil {
+		path := "actions"
+		message := err.Error()
+		var estate *estateGUIError
+		if errors.As(err, &estate) {
+			if estate.path != "" {
+				path = estate.path
+			}
+			message = estate.message
+		}
+		return guiError(contract.AXCodeInvalidArgument, path, message, `{"type":"click","window_ref":"w1","fx":0.5,"fy":0.5}`)
+	}
 	providerActions, err := decodeProviderDesktopActions(actions)
 	if err != nil {
 		return guiArgumentError(err, actions)
@@ -36,33 +53,17 @@ func (s *Service) gui(actions any, settleMS int) ToolCallResult {
 		return s.guiZoom(providerActions[0])
 	}
 	privateFrameID := ""
-	if guiBatchUsesFrameProvenance(providerActions) {
+	if guiBatchUsesFrameProvenance(providerActions) && !estateGeometryOnly {
 		if s.guiSnapshot == nil || s.guiSnapshot.FrameID == "" {
-			// Observe only: the provider wire rejects an empty batch, and an
-			// explicit screenshot action is the one batch that emits no input.
-			observed, err := s.callProviderDesktop(ProviderDesktopRequest{
-				ProtocolVersion: ProviderProtocolVersion,
-				Actions:         []ProviderDesktopAction{{Type: "screenshot"}},
-			})
-			if err != nil {
-				if result, rejected := runtimeRequestRejectionResult(err); rejected {
-					return result
-				}
-				return guiError(contract.AXCodeRuntimeError, "", err.Error(), GUIScreenshotCall)
-			}
-			// The internal screenshot is not one of the caller's actions.
-			observed.GUIResult.Dispatched = nil
-			result := s.guiResponse(*observed)
-			if !result.IsError {
-				result.IsError = true
-				SetGUIPublicError(&result, contract.AXCodeGUIFrameStale, "",
-					"GUI coordinate/window actions require a prior GUI screenshot. "+
-						"No actions were emitted; use the attached fresh screenshot.",
-					GUIScreenshotCall)
-			}
-			return result
+			return s.guiObserveWithoutInput()
 		}
 		privateFrameID = s.guiSnapshot.FrameID
+	}
+	if guiBatchCanEmitInput(providerActions) {
+		if paused, reason := estateRPAPause(); paused {
+			return guiError(contract.AXCodeRuntimeError, "", "RPA_PAUSED:"+reason,
+				`{"actions":[{"type":"screenshot"}]}`)
+		}
 	}
 	response, err := s.callProviderDesktop(ProviderDesktopRequest{
 		ProtocolVersion: ProviderProtocolVersion,
@@ -474,6 +475,31 @@ func withoutLeadingLine(content []ContentItem, line string) []ContentItem {
 		return append(out, content[index+1:]...)
 	}
 	return content
+}
+
+func (s *Service) guiObserveWithoutInput() ToolCallResult {
+	// Observe only: the provider wire rejects an empty batch, and an
+	// explicit screenshot action is the one batch that emits no input.
+	observed, err := s.callProviderDesktop(ProviderDesktopRequest{
+		ProtocolVersion: ProviderProtocolVersion,
+		Actions:         []ProviderDesktopAction{{Type: "screenshot"}},
+	})
+	if err != nil {
+		if result, rejected := runtimeRequestRejectionResult(err); rejected {
+			return result
+		}
+		return guiError(contract.AXCodeRuntimeError, "", err.Error(), GUIScreenshotCall)
+	}
+	observed.GUIResult.Dispatched = nil
+	result := s.guiResponse(*observed)
+	if !result.IsError {
+		result.IsError = true
+		SetGUIPublicError(&result, contract.AXCodeGUIFrameStale, "",
+			"GUI coordinate/window actions require a prior GUI screenshot. "+
+				"No actions were emitted; use the attached fresh screenshot.",
+			GUIScreenshotCall)
+	}
+	return result
 }
 
 func guiBatchUsesFrameProvenance(actions []ProviderDesktopAction) bool {

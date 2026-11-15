@@ -47,10 +47,9 @@ func (s *Service) waitForDesktopWindow(context *AXBatchContext, wait *axWait) To
 					titleMatches++
 				}
 			}
-			for _, window := range inventory.windows {
-				if containsFold(window.title, wait.window) {
-					matched = append(matched, window)
-				}
+			matched = windowsMatchingDirective(inventory, wait.window)
+			if titleMatches == 0 {
+				titleMatches = len(matched)
 			}
 		}
 		holds := titleMatches > 0

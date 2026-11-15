@@ -163,10 +163,12 @@ func windowInventorySnapshot(
     let focusedHandle = app.runningApplication.isActive ? focusedAXWindowHandle(pid: app.pid) : nil
     let records = try windows.map { window -> [String: Any] in
         AXUIElementSetMessagingTimeout(window, 0.25)
+        let windowID = windowNumber(window)
         return macWindowInventoryRecord(
-            pid: app.pid, generation: generation, windowID: windowNumber(window),
+            pid: app.pid, generation: generation, windowID: windowID,
             title: try inventoryWindowTitle(window), focusedHandle: focusedHandle,
-            modal: axBool(window, attribute: kAXModalAttribute as String)
+            modal: axBool(window, attribute: kAXModalAttribute as String),
+            bounds: macWindowEstateBounds(windowID: windowID, pid: app.pid, window: window)
         )
     }
     return [
@@ -203,18 +205,37 @@ func completeWindowTitle(status: AXError, value: CFTypeRef?) throws -> String {
 
 func macWindowInventoryRecord(
     pid: pid_t, generation: String, windowID: CGWindowID?, title: String,
-    focusedHandle: String?, modal: Bool
+    focusedHandle: String?, modal: Bool, bounds: CGRect? = nil
 ) -> [String: Any] {
     // No native ID means no executable handle; keep the title for honest waits.
     let handle = windowID.flatMap { $0 == 0 ? nil : macWindowHandle(pid: pid, windowID: $0) } ?? ""
     let active = !handle.isEmpty && focusedHandle == handle
-    return [
+    var record: [String: Any] = [
         "title": title, "role": "window", "handle": handle,
         "providerBusName": "mac:\(pid)",
         "providerObjectPath": handle.isEmpty ? "" : "window:\(handle)",
         "providerProcessGeneration": generation,
         "selected": active, "active": active, "modal": modal, "showing": true,
     ]
+    if let bounds, bounds.width > 0, bounds.height > 0 {
+        record["bounds"] = frameDictionary(bounds)
+    }
+    return record
+}
+
+func macWindowEstateBounds(
+    windowID: CGWindowID?, pid: pid_t, window: AXUIElement
+) -> CGRect? {
+    if let windowID,
+       let observation = windowServerBoundWindowObservation(
+        windowID: windowID, targetPID: pid
+       ),
+       let bounds = observation.bounds,
+       bounds.width > 0, bounds.height > 0
+    {
+        return bounds
+    }
+    return resolveLocalFrame(of: window, windowBounds: nil)
 }
 
 func appListingWindows(_ records: [[String: Any]]) -> [[String: Any]] {
@@ -223,7 +244,7 @@ func appListingWindows(_ records: [[String: Any]]) -> [[String: Any]] {
     }
     return records.map { record in
         let handle = string(record["handle"])
-        return [
+        var listed: [String: Any] = [
             "title": string(record["title"]), "role": string(record["role"]),
             "handle": handleCounts[handle] == 1 ? handle : "",
             "providerBusName": string(record["providerBusName"]),
@@ -231,6 +252,10 @@ func appListingWindows(_ records: [[String: Any]]) -> [[String: Any]] {
             "processGeneration": string(record["providerProcessGeneration"]),
             "active": bool(record["active"]), "inputTarget": true,
         ]
+        if let bounds = record["bounds"] {
+            listed["bounds"] = bounds
+        }
+        return listed
     }
 }
 

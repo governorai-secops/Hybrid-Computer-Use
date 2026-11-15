@@ -144,7 +144,7 @@ func TestActivateByTitleResolvesExactlyOneWindowBeforeInput(t *testing.T) {
 		want  []string
 	}{
 		"none": {"Budget", contract.AXCodeWindowNotFound, []string{
-			`no visible window title contains "Budget"`, `w3 "Inbox - Mail"`}},
+			`no visible window title or unique app name contains "Budget"`, `w3 "Inbox - Mail"`}},
 		"many": {"editor", contract.AXCodeAmbiguousWindow, []string{
 			`2 windows match title "editor"`, `w1 "Quarterly report - Editor"`, `w2 "Notes - Editor"`}},
 	} {
@@ -177,6 +177,97 @@ func TestActivateByTitleResolvesExactlyOneWindowBeforeInput(t *testing.T) {
 	window, err := service.resolveWindowTitle("QUARTERLY")
 	if err != nil || window.ref != "w1" || window.handle != testHandleReport {
 		t.Fatalf("one case-insensitive match must resolve to w1: %#v %#v", window, err)
+	}
+}
+
+const testHandleEmptyTitle = "w2:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+
+func untitledBrokerApps() []AppDescriptor {
+	return []AppDescriptor{{
+		Name: "Webull Desktop", BundleIdentifier: "com.webull.desktop.v1", PID: 99, InputCapable: true,
+		ProviderBusName: ":1.99", ProcessGeneration: "pid:99:start:1",
+		Windows: []ProviderAppWindow{{
+			Title: "", Role: "window", Handle: testHandleEmptyTitle,
+			ProviderBusName: ":1.99", ProviderObjectPath: "/w/empty",
+			ProcessGeneration: "pid:99:start:1", Active: true, InputTarget: true,
+			NoAccessibilityTree: true,
+		}},
+	}}
+}
+
+func TestActivateByTitleMatchesUniqueAppWhenWindowTitleEmpty(t *testing.T) {
+	service, backend := windowScriptService(untitledBrokerApps())
+	window, err := service.resolveWindowTitle("Webull")
+	if err != nil || window == nil || window.ref != "w1" || window.handle != testHandleEmptyTitle {
+		t.Fatalf("unique empty-title app must resolve by app name: %#v %#v", window, err)
+	}
+	backend.windowResponse = &ProviderWindowResult{OK: true}
+	result := service.handleAXRequest(map[string]any{
+		"mode": "act", "actions": []any{
+			map[string]any{"type": "activate", "title": "Webull"},
+		},
+	})
+	text := ResultText(result)
+	if result.IsError || !strings.Contains(text, "activated w1") {
+		t.Fatalf("unique empty-title app must activate by app name:\n%s", text)
+	}
+	if len(backend.calls) == 0 || backend.calls[len(backend.calls)-1] != "window_activate" {
+		t.Fatalf("activate did not reach the provider: %v", backend.calls)
+	}
+}
+
+func TestActivateByTitlePrefersInAppTitleOverOtherWindowsOfSameApp(t *testing.T) {
+	apps := []AppDescriptor{{
+		Name: "Webull Desktop", BundleIdentifier: "com.webull.desktop.v1", PID: 99, InputCapable: true,
+		ProviderBusName: ":1.99", ProcessGeneration: "pid:99:start:1",
+		Windows: []ProviderAppWindow{
+			{
+				Title: "", Role: "window", Handle: testHandleEmptyTitle,
+				ProviderBusName: ":1.99", ProviderObjectPath: "/w/empty",
+				ProcessGeneration: "pid:99:start:1", Active: true, InputTarget: true,
+				NoAccessibilityTree: true,
+			},
+			{
+				Title: "Webull Positions", Role: "window", Handle: testHandleReport,
+				ProviderBusName: ":1.99", ProviderObjectPath: "/w/positions",
+				ProcessGeneration: "pid:99:start:1", Active: false, InputTarget: true,
+				NoAccessibilityTree: true,
+			},
+		},
+	}}
+	service, _ := windowScriptService(apps)
+	window, err := service.resolveWindowTitle("Positions")
+	if err != nil || window == nil || window.handle != testHandleReport {
+		t.Fatalf("in-app title must win over the empty-title sibling: %#v %#v", window, err)
+	}
+}
+
+func TestActivateByAppIgnoresFinderTitleThatContainsTheAppName(t *testing.T) {
+	finder := AppDescriptor{
+		Name: "Finder", BundleIdentifier: "com.apple.finder", PID: 8, InputCapable: true,
+		ProviderBusName: ":1.8", ProcessGeneration: "pid:8:start:1",
+		Windows: []ProviderAppWindow{{
+			Title: "Webull Desktop 9.17.0", Role: "window", Handle: testHandleNotes,
+			ProviderBusName: ":1.8", ProviderObjectPath: "/w/finder",
+			ProcessGeneration: "pid:8:start:1", Active: false, InputTarget: true,
+			NoAccessibilityTree: true,
+		}},
+	}
+	apps := append(untitledBrokerApps(), finder)
+	service, backend := windowScriptService(apps)
+	window, err := service.resolveWindowTitle("Webull")
+	if err != nil || window == nil || window.handle != testHandleEmptyTitle {
+		t.Fatalf("unique broker app must win over a Finder folder titled after it: %#v %#v", window, err)
+	}
+	backend.windowResponse = &ProviderWindowResult{OK: true}
+	result := service.handleAXRequest(map[string]any{
+		"mode": "act", "actions": []any{
+			map[string]any{"type": "activate", "title": "Webull"},
+		},
+	})
+	text := ResultText(result)
+	if result.IsError || !strings.Contains(text, "activated w1") {
+		t.Fatalf("activate Webull must bind the broker, not Finder:\n%s", text)
 	}
 }
 

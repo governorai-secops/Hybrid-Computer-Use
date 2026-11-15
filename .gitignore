@@ -25,3 +25,5 @@
 .DS_Store
 .vscode/
 .idea/
+# Local Apple Development identity; keeps TCC cdhash stable across rebuilds.
+/computer-use/native/macos/codesign.identity

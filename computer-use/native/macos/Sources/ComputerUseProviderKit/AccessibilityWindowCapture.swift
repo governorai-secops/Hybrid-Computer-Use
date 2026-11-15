@@ -144,7 +144,19 @@ func boundedScreenshotPNGData(
         return original
     }
 
+    // Always apply the dimension-fit resize, even when that scale is below
+    // minScale. minScale only floors further shrinking for the byte budget.
     var best = original
+    if let resized = resizedCGImage(image, scale: scale),
+       let data = pngData(for: resized)
+    {
+        best = data
+        if data.count <= maxBytes {
+            return data
+        }
+    }
+
+    scale *= 0.85
     while scale >= minScale {
         guard let resized = resizedCGImage(image, scale: scale),
               let data = pngData(for: resized)

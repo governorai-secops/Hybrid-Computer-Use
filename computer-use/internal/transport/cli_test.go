@@ -54,6 +54,8 @@ var cliGolden = []struct {
 	{"gui screenshot", "GUI", `{"actions":[{"type":"screenshot"}]}`},
 	{"gui zoom 600 60 680 100", "GUI", `{"actions":[{"type":"zoom","region":[600,60,680,100]}]}`},
 	{"gui click 120 40", "GUI", `{"actions":[{"type":"click","x":120,"y":40}]}`},
+	{"gui click --window w1 --fx 0.08 --fy 0.04", "GUI", `{"actions":[{"type":"click","window_ref":"w1","fx":0.08,"fy":0.04}]}`},
+	{"gui click --title Calculator --fx 0.5 --fy 0.5", "GUI", `{"actions":[{"type":"click","title":"Calculator","fx":0.5,"fy":0.5}]}`},
 	{"gui double_click 120 40", "GUI", `{"actions":[{"type":"double_click","x":120,"y":40}]}`},
 	{"gui move 120 40", "GUI", `{"actions":[{"type":"move","x":120,"y":40}]}`},
 	{"gui type hello", "GUI", `{"actions":[{"type":"type","text":"hello"}]}`},

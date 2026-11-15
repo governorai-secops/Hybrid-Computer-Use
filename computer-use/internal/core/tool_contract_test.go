@@ -465,7 +465,7 @@ func TestPublicModelContractDoesNotRecommendLegacyMutationTargets(t *testing.T) 
 	for _, required := range []string{
 		"Copy rN/wN exactly",
 		"stale refs fail",
-		"activate/close take a title substring or wN",
+		"activate/close take a title substring, unique app name, or wN",
 	} {
 		if !strings.Contains(publicContract, required) {
 			t.Fatalf("public model contract is missing %q", required)

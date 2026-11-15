@@ -219,7 +219,7 @@ func axInputSchema() map[string]any {
 							"type": "string", "pattern": "^r[1-9][0-9]*$",
 							"description": "select: range end; ref..to_ref spans text or cells.",
 						},
-						"title": nonBlankString("activate/close: unique window-title substring, instead of wN."),
+						"title": nonBlankString("activate/close: unique window-title substring, or unique app name when the title is empty, instead of wN."),
 						"text": map[string]any{
 							"type": "string", "minLength": 1, "maxLength": MaxActionText,
 							"description": "wait: text in the ref element, or anywhere in the window. select: substring of ref to select.",
@@ -318,16 +318,27 @@ func guiActionProperty(includeScreenshot bool) map[string]any {
 			branch("screenshot", "Capture the final full desktop; this action must be the only action in the call.", nil, nil),
 		)
 	}
+	clickButton := enumStringProperty(
+		"Mouse button. Defaults to left.",
+		[]string{"left", "right", "wheel", "back", "forward"},
+	)
+	click := branch("click", "Click pixels or a window frame.", map[string]any{
+		"x":          numberProperty("Screenshot X pixel."),
+		"y":          numberProperty("Screenshot Y pixel."),
+		"window_ref": stringProperty("wN."),
+		"title":      stringProperty("Title or unique app."),
+		"fx":         unitIntervalProperty("0..1 of width."),
+		"fy":         unitIntervalProperty("0..1 of height."),
+		"button":     clickButton,
+		"keys":       mouseKeys,
+	}, nil)
+	click["anyOf"] = []any{
+		map[string]any{"required": []string{"x", "y"}},
+		map[string]any{"required": []string{"fx", "fy", "window_ref"}},
+		map[string]any{"required": []string{"fx", "fy", "title"}},
+	}
 	branches = append(branches,
-		branch("click", "Click.", map[string]any{
-			"x": numberProperty("Screenshot X pixel."),
-			"y": numberProperty("Screenshot Y pixel."),
-			"button": enumStringProperty(
-				"Mouse button. Defaults to left.",
-				[]string{"left", "right", "wheel", "back", "forward"},
-			),
-			"keys": mouseKeys,
-		}, []string{"x", "y"}),
+		click,
 		branch("double_click", "Double click.", map[string]any{
 			"x":    numberProperty("Screenshot X pixel."),
 			"y":    numberProperty("Screenshot Y pixel."),
@@ -425,7 +436,7 @@ const axToolDescription = "Accessibility for application windows. Modes: " +
 	"stops at the first failed step, and reports each target's change, windows " +
 	"opened/closed/focused, and a diff. Copy rN/wN exactly; stale refs fail. keypress/type " +
 	"without ref go to the focused window. select marks ref, its text substring, or ref..to_ref " +
-	"(paragraphs, cells) and reports the selection read back. activate/close take a title substring or wN. " +
+	"(paragraphs, cells) and reports the selection read back. activate/close take a title substring, unique app name, or wN. " +
 	"A wait step sends no input and fails the batch on timeout: window (title, any app), " +
 	"query (as find), ref with value/state/text, or text; gone inverts. settle needs no " +
 	"prediction: it waits until the UI changes after the step before it and stops changing; " +
@@ -437,12 +448,13 @@ const axToolDescription = "Accessibility for application windows. Modes: " +
 
 var guiToolDescription = fmt.Sprintf("Full-desktop screenshot and pixel input. "+
 	`{"actions":[{"type":"screenshot"}]} alone observes; {"type":"zoom","region":[x0,y0,x1,y1]} alone `+
-	"enlarges a frame region to read small text and icons. Any other batch is checked before "+
+	"enlarges a region. Any other batch is checked before "+
 	"input and returns one final screenshot. x/y are pixels of the latest full-desktop image (screen "+
-	"width x height) from GUI or AX full/screenshot, which return the same frame. type/keypress go to the current focus, so click "+
+	"width x height) from GUI or AX full/screenshot, which return the same frame. "+
+	"window_ref/title + fx/fy clicks that window. type/keypress go to the current focus, so click "+
 	"the field first. Batch the actions planned from one screenshot; end "+
 	"the batch after an action that may open, close, or move a window, and plan the rest "+
-	"from the returned image. GUI cannot address windows; AX activates and closes them by "+
+	"from the returned image. AX activates and closes windows by "+
 	"title. wait is one second with no observation, at most %d s per batch. Errors return "+
 	"code and hint like AX; gui_frame_stale means nothing was sent: replan from the "+
 	"returned screenshot. Example: "+
@@ -500,6 +512,13 @@ func enumStringProperty(description string, values []string) map[string]any {
 
 func numberProperty(description string) map[string]any {
 	return map[string]any{"type": "number", "description": description}
+}
+
+func unitIntervalProperty(description string) map[string]any {
+	property := numberProperty(description)
+	property["minimum"] = 0
+	property["maximum"] = 1
+	return property
 }
 
 func integerProperty(description string) map[string]any {

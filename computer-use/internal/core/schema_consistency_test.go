@@ -86,6 +86,9 @@ var liveStateRejections = []string{
 	"is not a current",
 	"unknown AX find cursor",
 	"was never issued in this session",
+	"is not a current wN from AX apps",
+	"has no estate window frame",
+	"no visible window title or unique app name contains",
 }
 
 type runtimeVerdict struct {

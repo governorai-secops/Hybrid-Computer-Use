@@ -112,6 +112,41 @@ func guiPointOutsideTheLastDeliveredPixelIsRejected(_ point: [Double]) {
     }
 }
 
+private func solidCGImage(width: Int, height: Int) -> CGImage? {
+    guard let context = CGContext(
+        data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+        space: CGColorSpaceCreateDeviceRGB(),
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+    ) else {
+        return nil
+    }
+    context.setFillColor(CGColor(red: 0.2, green: 0.4, blue: 0.6, alpha: 1))
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    return context.makeImage()
+}
+
+@Test
+func guiScreenshotFitsInsideTheModelDeliveredBoundsWhenNativeExceedsMinScale() throws {
+    // Live Studio+Dell 6400×3600 needs scale ~0.213, below screenshotResultMinScale
+    // 0.25. The GUI PNG must still be the 1365×768 desktopDeliveredBounds the
+    // provider validates clicks against.
+    let image = try #require(solidCGImage(width: 6400, height: 3600))
+    let data = try #require(boundedScreenshotPNGData(
+        for: image,
+        maxBytes: 64 << 20,
+        maxWidth: guiScreenshotResultMaxWidth,
+        maxHeight: guiScreenshotResultMaxHeight
+    ))
+    let dimensions = try #require(imageDimensions(data))
+    let delivered = desktopDeliveredBounds(
+        CGRect(x: 0, y: 0, width: 6400, height: 3600)
+    )
+    #expect(dimensions.width == Int(delivered.width))
+    #expect(dimensions.height == Int(delivered.height))
+    #expect(dimensions.width <= Int(guiScreenshotResultMaxWidth))
+    #expect(dimensions.height <= Int(guiScreenshotResultMaxHeight))
+}
+
 @Test
 func guiPointOnTheFirstAndLastDeliveredPixelIsAccepted() throws {
     let bounds = CGRect(x: 0, y: 0, width: 1280, height: 720)

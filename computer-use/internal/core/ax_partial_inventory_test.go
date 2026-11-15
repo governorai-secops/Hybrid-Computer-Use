@@ -56,6 +56,34 @@ func TestPartialAppsKeepConfirmedCloseRefUsable(t *testing.T) {
 	}
 }
 
+func TestActivateByTitleUsesUniqueConfirmedWindowWhenInventoryIncomplete(t *testing.T) {
+	apps := editorApps(testWindow{testHandleReport, "Report - Editor", true})
+	apps[0].Windows[0].NoAccessibilityTree = true
+	backend := &recordingPlatformBackend{accessibilityResponse: &ProviderAccessibilityResult{
+		OK:              true,
+		Apps:            apps,
+		InventoryIssues: []ProviderInventoryIssue{{App: "Busy app", Reason: "AXWindows unavailable (AX -25204)"}},
+	}}
+	s := NewServiceWithBackend(backend)
+	backend.windowResponse = &ProviderWindowResult{
+		OK:             true,
+		ActionEvidence: &ProviderActionEvidence{InputEmitted: true, Route: "native_window_command"},
+		Mutation:       &ProviderMutationFacts{InputEventsEmitted: true, DesktopStateMutated: true},
+	}
+	result := s.handleAXRequest(map[string]any{
+		"mode": "act", "actions": []any{
+			map[string]any{"type": "activate", "title": "Report"},
+		},
+	})
+	text := ResultText(result)
+	if result.IsError || !strings.Contains(text, "activated w1") {
+		t.Fatalf("unique confirmed title must activate even when another app's inventory is incomplete:\n%s", text)
+	}
+	if len(backend.calls) == 0 || backend.calls[len(backend.calls)-1] != "window_activate" {
+		t.Fatalf("activate did not reach the provider: %v", backend.calls)
+	}
+}
+
 func TestPartialInventoryCannotEstablishUniqueTitleFocusOrAbsence(t *testing.T) {
 	for _, action := range []map[string]any{
 		{"type": "close", "title": "Report"},

@@ -36,6 +36,8 @@ type ProviderAppWindow struct {
 	// NoAccessibilityTree marks a window whose process exports no
 	// accessibility tree; it has a native handle only.
 	NoAccessibilityTree bool `json:"noAccessibilityTree,omitempty"`
+	// Bounds is the native desktop frame of the window (estate geometry).
+	Bounds *frame `json:"bounds,omitempty"`
 }
 
 type frame struct {
